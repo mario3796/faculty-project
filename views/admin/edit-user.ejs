@@ -1,0 +1,48 @@
+<%- include ('../includes/header.ejs') %>
+    </head>
+
+    <body>
+        <%- include ('../includes/navigation.ejs') %>
+            <div class="container">
+                <% if(errorMessage) { %>
+                    <center>
+                        <div class="alert alert-danger col-sm-4 text-center">
+                            <%= errorMessage %>
+                        </div>
+                    </center>
+                    <% } %>
+                        <form class="add-player-form" action="<% if(editing) { %> edit-user <% } else { %> add-user <% } %>" method="post" novalidate>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <input type="text" class="form-control <%= validationErrors.find(e => e.param === 'firstName') ? 'border-danger' : '' %>" name="firstName" id="firstName" value="<% if(editing || hasError) { %> <%= user.name.split(' ')[0] %> <% } %>" placeholder="First Name"
+                                        required>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <input type="text" class="form-control <%= validationErrors.find(e => e.param === 'lastName') ? 'border-danger' : '' %>" name="lastName" id="lastName" value="<% if(editing || hasError) { %> <%= user.name.split(' ')[1] %> <% } %>" placeholder="Last Name"
+                                        required>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <input type="email" class="form-control <%= validationErrors.find(e => e.param === 'email') ? 'border-danger' : '' %>" name="email" id="email" value="<% if(editing || hasError) { %> <%= user.email %> <% } %>" placeholder="Email" required>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <input type="password" class="form-control <%= validationErrors.find(e => e.param === 'password') ? 'border-danger' : '' %>" name="password" id="password" value="<% if(editing || hasError) { %> <%= user.password %> <% } %>" placeholder="Password" required>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <input type="text" class="form-control <%= validationErrors.find(e => e.param === 'department') ? 'border-danger' : '' %>" name="department" id="department" value="<% if(editing || hasError) { %> <%= department %> <% } %>" placeholder="Department" required>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <select class="form-control <%= validationErrors.find(e => e.param === 'userType') ? 'border-danger' : '' %>" name="userType" required>
+                                <option value="">Choose User Type</option>
+                                <option value="student" <% if(editing || hasError) { %> <% if(user.user_type === 'student') { %> selected <% } %> <% } %>>Student</option>
+                                <option value="instructor" <% if(editing || hasError) { %> <% if(user.user_type === 'instructor') { %> selected <% } %> <% } %>>Instructor</option>
+                              </select>
+                                </div>
+                            </div>
+                            <% if (editing) { %>
+                                <input type="hidden" value="<%= user.id %>" name="userId" required>
+                                <% } %>
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                    <button type="submit" class="btn btn-primary float-right"><% if(editing) { %> Update User <% } else { %> Add User <% } %></button>
+                        </form>
+            </div>
+            <%- include('../includes/end.ejs') %>

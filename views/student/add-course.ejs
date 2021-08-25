@@ -1,0 +1,43 @@
+<%- include ('../includes/header.ejs') %>
+    </head>
+
+    <body>
+        <%- include ('../includes/navigation.ejs') %>
+            <div class="table-wrapper">
+                <% if (courses.length> 0) {%>
+                    <table class="table table-hovered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Instructor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% courses.forEach((course) => { %>
+                                <tr>
+                                    <th scope="row">
+                                        <%= course.id %>
+                                    </th>
+                                    <td>
+                                        <%= course.name %>
+                                    </td>
+                                    <td>
+                                        <%= users.find(e => e.id === course.Instructor.UserId).name %>
+                                    </td>
+
+                                    <td>
+                                        <form action="/student/add-course" method="POST">
+                                            <input type="hidden" name="courseId" value="<%= course.id %>" required>
+                                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                            <button type="submit" class="btn btn-sm btn-success">Register</button> </form>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                        </tbody>
+                    </table>
+                    <% } else { %>
+                        <p class="text-center">No courses found.</p>
+                        <% } %>
+            </div>
+            <%- include ('../includes/end.ejs') %>

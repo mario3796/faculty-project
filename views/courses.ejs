@@ -1,0 +1,61 @@
+<%- include ('./includes/header.ejs') %>
+    </head>
+
+    <body>
+        <%- include ('./includes/navigation.ejs') %>
+            <div class="table-wrapper">
+                <% if (courses.length> 0) {%>
+                    <table class="table table-hovered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Name</th>
+                                <% if(path === '/courses' || path === '/student/courses') { %>
+                                    <th scope="col">Instructor</th>
+                                    <% } %>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% courses.forEach((course) => { %>
+                                <tr>
+                                    <th scope="row">
+                                        <%= course.id %>
+                                    </th>
+                                    <td>
+                                        <%= course.name %>
+                                    </td>
+                                    <% if(path === '/courses') { %>
+                                        <td>
+                                            <%= users.find(e => e.id === course.Instructor.UserId).name %>
+                                        </td>
+                                        <% } %>
+
+                                            <% if(path === '/student/courses') { %>
+                                                <td>
+                                                    <%= users.find(e => e.Instructor.id === course.InstructorId).name %>
+                                                </td>
+
+                                                <% } %>
+
+                                                    <td>
+                                                        <form action="<%= path === '/courses' ? '/admin/delete-course' : '/student/delete-course' %>" method="POST">
+                                                            <a href="/course-students/<%= course.id %>" class="btn btn-sm btn-primary">View Students</a>
+                                                            <% if(isAuthenticated && (userType === 'admin' || path === '/student/courses')) { %>
+                                                                <input type="hidden" name="courseId" value="<%= course.id %>" required>
+                                                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                                                <button type="submit" class="btn btn-sm btn-danger">Delete</button> </form>
+                                                        <% } %>
+                                                    </td>
+                                </tr>
+                                <% }) %>
+                        </tbody>
+                    </table>
+                    <% } else { %>
+                        <p class="text-center">No courses found.
+                            <% if(isAuthenticated && userType === 'admin') { %>
+                                Go <a href="/admin/add-course">here</a> to add courses.
+                                <% } %>
+                        </p>
+                        <% } %>
+            </div>
+            <%- include ('./includes/end.ejs') %>

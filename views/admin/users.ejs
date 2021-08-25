@@ -1,0 +1,58 @@
+<%- include ('../includes/header.ejs') %>
+    </head>
+
+    <body>
+        <%- include ('../includes/navigation.ejs') %>
+            <div class="table-wrapper">
+                <% if (users.length> 0) {%>
+                    <table class="table table-hovered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Full Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Department</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% users.forEach((user) => { %>
+                                <tr>
+                                    <th scope="row">
+                                        <%= user.id %>
+                                    </th>
+                                    <td>
+                                        <%= user.name %>
+                                    </td>
+                                    <td>
+                                        <%= user.email %>
+                                    </td>
+                                    <td>
+                                        <% if (path === '/admin/instructors') { %>
+                                            <%= user.Instructor.department %>
+                                                <% } else { %>
+                                                    <%= user.Student.department %>
+                                                        <% } %>
+                                    </td>
+
+                                    <% if(isAuthenticated && userType === 'admin') { %>
+                                        <td>
+                                            <form action="/admin/delete-user" method="POST">
+                                                <a href="/admin/edit-user/<%= user.id %>" class="btn btn-sm btn-success">Edit</a>
+                                                <input type="hidden" name="userId" value="<%= user.id %>" required>
+                                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                                <button type="submit" class="btn btn-sm btn-danger">Delete</button> </form>
+                                        </td>
+                                        <% } %>
+                                </tr>
+                                <% }) %>
+                        </tbody>
+                    </table>
+                    <% } else { %>
+                        <p class="text-center">No users found.
+                            <% if (isAuthenticated) { %>
+                                Go <a href="/admin/add-user">here</a> to add users.
+                                <% } %>
+                        </p>
+                        <% } %>
+            </div>
+            <%- include ('../includes/end.ejs') %>
